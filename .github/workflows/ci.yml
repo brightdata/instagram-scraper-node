@@ -104,7 +104,13 @@ jobs:
                 "else",
                 '  echo "NOTE: $repo returns HTTP $code, so it is not public yet."',
                 '  echo "Installing from this checkout instead."',
-                '  npm install -g "$GITHUB_WORKSPACE"',
+                // Pack, then install the tarball. `npm install -g <dir>` links
+                // to the directory instead of copying it, so the command would
+                // resolve its imports from a checkout that has no node_modules
+                // and die with ERR_MODULE_NOT_FOUND. Packing is also what
+                // installing from a git URL does, so this stays the same test.
+                '  tarball=$(cd "$GITHUB_WORKSPACE" && npm pack --pack-destination "$RUNNER_TEMP" --silent)',
+                '  npm install -g "$RUNNER_TEMP/$tarball"',
                 "fi",
               ].join("\n");
             }
