@@ -402,6 +402,7 @@ jobs:
           let err = "";
           let ok = false;
           let secs = 0;
+          let status = null;
           for (const attempt of [1, 2]) {
             const started = Date.now();
             // a README javascript block is ESM: node reads it from stdin under --input-type
@@ -423,13 +424,21 @@ jobs:
               out = out.replaceAll(secret, "***");
               err = err.replaceAll(secret, "***");
             }
-            ok = run.status === 0 && Boolean(b.lang === "javascript" ? out : out || err);
+            status = run.status;
+            ok = status === 0 && Boolean(b.lang === "javascript" ? out : out || err);
             if (ok || ((out || err) && !`${out}${err}`.toLowerCase().includes("timeout"))) break;
             if (attempt === 1) await sleep(30_000);  // the API timed out or said nothing; one retry
           }
+          // A block that exits 0 and prints nothing is the confusing case: the
+          // snippet ran, the API answered, and the loop had no rows to print.
+          // Saying "no output" alone sends the next reader looking for a crash
+          // that never happened, so name the shape of the failure instead.
+          const quiet = status === 0 && !out && !err;
           const shown = ok
             ? (out.split("\n")[0] ?? "")
-            : (err.split("\n").at(-1) || out.split("\n").at(-1) || "no output");
+            : quiet
+              ? "exited 0 and printed nothing: the call returned no rows"
+              : (err.split("\n").at(-1) || out.split("\n").at(-1) || `no output, exit ${status}`);
           console.log(`\n\`${b.title}\`: ${ok ? "ok" : "FAILED"} in ${secs}s\n\n    ${shown.slice(0, 120)}`);
           process.exit(ok ? 0 : 1);
           JS
