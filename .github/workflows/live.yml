@@ -346,6 +346,16 @@ jobs:
       - name: Install the package and, for CLI blocks, the Bright Data CLI
         run: |
           npm install
+          # Two README blocks need this package installed, not just its deps.
+          # The command block calls `instagram-scraper` by name, and the import
+          # block does `from "@brightdata/instagram-scraper-node"`. npm install
+          # alone gives neither, where pip install -e gave Python both. So pack
+          # once and install it twice: globally for the command, and into
+          # node_modules under its own name for the import. --no-save keeps the
+          # self-reference out of package.json.
+          tarball=$(npm pack --pack-destination "$RUNNER_TEMP" --silent)
+          npm install -g "$RUNNER_TEMP/$tarball"
+          npm install --no-save "$RUNNER_TEMP/$tarball"
           if [ "${{ matrix.lang }}" = "bash" ]; then npm i -g @brightdata/cli@0.3.4; fi
       - name: Run block ${{ matrix.n }} exactly as the README shows it
         env:
