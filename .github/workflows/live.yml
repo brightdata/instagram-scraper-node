@@ -447,8 +447,13 @@ jobs:
     name: Put today's date on the README's "last verified" badge
     needs: [scrape, plan, block]
     # scheduled and manual runs only, and only in the main repository: a push is
-    # never followed by a bot commit, and a copy never diverges from the original
-    if: always() && !cancelled() && github.event_name != 'push' && github.repository == 'brightdata/instagram-scraper-node'
+    # never followed by a bot commit, and a copy never diverges from the original.
+    #
+    # `inputs.only` empty as well: a run of one block that passes is not the
+    # README verified, and a green badge has to mean the whole of it. A
+    # scheduled run has no inputs at all, where `inputs.only` is null and this
+    # comparison is still true, so the daily and Monday runs still set it.
+    if: always() && !cancelled() && github.event_name != 'push' && inputs.only == '' && github.repository == 'brightdata/instagram-scraper-node'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -479,7 +484,9 @@ jobs:
           if git diff --quiet; then echo "badge already shows $today"; exit 0; fi
           git config user.name "anil-bd"
           git config user.email "210667061+anil-bd@users.noreply.github.com"
-          git commit -qam "Last verified $today (automated daily check)"
+          # $label, not a fixed "Last verified": the log should not claim a
+          # check passed on a day the badge went red.
+          git commit -qam "${label^} $today (automated daily check)"
           git pull -q --rebase origin main
           git push -q origin main
           echo "badge now shows: $label, $today"
