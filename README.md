@@ -93,9 +93,6 @@ npm install -g github:brightdata/instagram-scraper-node
 instagram-scraper nasa natgeo
 ```
 
-While this repository is private, that install line works only for people with
-access to it.
-
 ```
 Fetching up to 5 recent posts per account, for: nasa, natgeo
 Usually one to three minutes each. One credit per post, 5,000 free per month.
