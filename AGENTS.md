@@ -74,7 +74,7 @@ SDK's own JSDoc.
   `<!-- fields:end -->` and is regenerated daily. Do not edit it by hand.
 - The "last verified" badge line at the top of the README is rewritten by the
   daily run. Do not edit it by hand.
-- Keep it small: 14 files and about 320 lines of JavaScript in `src/`. Do not
+- Keep it small: 15 files and about 320 lines of JavaScript in `src/`. Do not
   add retries, deduplication, scheduling, databases or concurrency.
 
 ## The API stalls in waves
