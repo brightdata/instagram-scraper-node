@@ -4,7 +4,7 @@
   "description": "Instagram scraper in JavaScript: profiles, posts, reels and comments as JSON, on the Bright Data Instagram Scraper API (Web Scraper API). No Instagram login, no browser. 5,000 free credits a month.",
   "private": true,
   "type": "module",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "engines": {
     "node": ">=20"
   },
