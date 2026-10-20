@@ -504,3 +504,7 @@ Anything about the API, your account or your credits:
 ## License
 
 [Apache 2.0](LICENSE).
+
+## Python version
+
+The same Instagram scraper is available for Python: [brightdata/instagram-scraper](https://github.com/brightdata/instagram-scraper).
