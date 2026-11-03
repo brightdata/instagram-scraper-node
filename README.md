@@ -1,11 +1,11 @@
 [![Scrape Instagram data with the Instagram Scraper API: profiles, posts, reels, search. Collect or discover by URL and username. Start free.](.github/banner.png)](https://brightdata.com/products/web-scraper/instagram?utm_source=github)
 
-# instagram-scraper-node
+# Instagram scraper for Node.js and JavaScript
 
 [![Live check](https://github.com/brightdata/instagram-scraper-node/actions/workflows/live.yml/badge.svg)](https://github.com/brightdata/instagram-scraper-node/actions/workflows/live.yml)
 [![last verified](https://img.shields.io/badge/last%20verified-3%20Nov%202026-brightgreen)](https://github.com/brightdata/instagram-scraper-node/actions/workflows/live.yml) <!-- verified: rewritten by the daily run -->
 
-[Quickstart](#quickstart) · [Command](#or-run-it-as-a-command) · [Endpoints](#the-rest-of-the-api) · [Data](#the-data) · [Errors](#when-it-fails) · [Coding agents](#coding-agents) · [Docs](https://docs.brightdata.com/products/scrapers/instagram/introduction) · [Support](#support)
+[Quickstart](#how-to-scrape-instagram-data-with-nodejs) · [No login](#scrape-instagram-without-login-or-an-access-token) · [CLI](#bulk-instagram-scraper-cli) · [Endpoints](#scrape-instagram-posts-profiles-reels-and-comments) · [Data](#instagram-post-data-fields-json) · [Errors](#instagram-scraper-errors) · [MCP and Claude Code](#instagram-mcp-server-and-claude-code-skill) · [Free credits](#is-this-instagram-scraper-free) · [Docs](https://docs.brightdata.com/products/scrapers/instagram/introduction) · [Support](#support)
 
 Instagram profiles, posts, reels and comments as JSON, in JavaScript. No
 Instagram login, no browser. Built on the
@@ -16,9 +16,9 @@ Full API docs:
 [Instagram Scraper API](https://docs.brightdata.com/products/scrapers/instagram/introduction).
 
 Also here: a one-command CLI for posts, and the
-[Bright Data CLI](#coding-agents), which needs no JavaScript at all.
+[Bright Data CLI](#instagram-mcp-server-and-claude-code-skill), which needs no JavaScript at all.
 
-## Quickstart
+## How to scrape Instagram data with Node.js
 
 Node 20 or newer. This package is ESM, so use `import`, not `require`.
 
@@ -36,7 +36,7 @@ Or skip the token. Run `npx -p @brightdata/cli bdata login` once: it opens a
 browser, and from then on the SDK finds the stored credentials on its own, for
 you and for any coding agent working in that terminal. Agents cannot click
 through the login, so do it yourself first. The same CLI scrapes Instagram
-directly; see [Coding agents](#coding-agents).
+directly; see [Instagram MCP server and Claude Code skill](#instagram-mcp-server-and-claude-code-skill).
 
 No account yet? [Create one](https://brightdata.com/cp/start); new accounts get
 [5,000 free credits a month](https://docs.brightdata.com/general/account/billing-and-pricing/free-tier).
@@ -83,10 +83,18 @@ example expires before the first status check.
 `discoverPostsByProfileURL` returns a job, not records. `toResult` polls until
 the snapshot is ready, then fetches it.
 
-## Or run it as a command
+## Scrape Instagram without login or an access token
 
-The command in this repo does the same for several accounts and writes one
-JSON file.
+The Instagram Scraper API needs no Instagram account, no Meta access token and
+no Instagram business account. The only credential is a Bright Data API key,
+set as `BRIGHTDATA_API_TOKEN` or stored by `bdata login`. Instagram private API
+packages on npm usually sign in with an Instagram username and password;
+this scraper never does.
+
+## Bulk Instagram scraper CLI
+
+The command in this repo runs the Node.js quickstart for several accounts at
+once and writes one JSON file.
 
 ```bash
 npm install -g github:brightdata/instagram-scraper-node
@@ -139,7 +147,7 @@ zz_not_a_real_account_zz failed: Crawler error: Cannot read properties of null (
 
 An account with nothing recent is a success with no posts.
 
-## The rest of the API
+## Scrape Instagram posts, profiles, reels and comments
 
 The command covers the first row of the table below. The rest of the SDK's
 Instagram surface is the other rows, documented in the
@@ -178,7 +186,7 @@ tell a dead account from a quiet one uses it.
 `"post"` and `"reel"`, and neither returns posts today
 ([sdk-js#34](https://github.com/brightdata/sdk-js/issues/34)).
 
-### Two accounts, one job
+### Scrape multiple Instagram accounts in one job
 
 An array of filters is one job, not one per account.
 
@@ -237,7 +245,7 @@ fetched: https://www.instagram.com/p/DcOX3hWFiey/ likes: 573306
 `async: true` is what makes `collectPosts` hand back a job. A `ScrapeJob` also
 has `download()` to write the snapshot to disk and `cancel()` to stop it.
 
-### A date window
+### Filter Instagram posts by date
 
 ```javascript
 import { bdclient } from "@brightdata/sdk";
@@ -271,7 +279,9 @@ await client.close();
 A window with nothing in it comes back as zero rows and `success: true`, not as
 an error. `posts_to_not_include` takes an array of post IDs.
 
-### A profile, by URL
+### Scrape an Instagram profile by URL
+
+The record carries the account's followers count and post count.
 
 ```javascript
 import { bdclient } from "@brightdata/sdk";
@@ -288,7 +298,7 @@ await client.close();
 nasa followers: 104352721 posts: 4925
 ```
 
-### Comments on a post
+### Scrape comments from an Instagram post or reel
 
 One credit per comment, and there is no way to ask for fewer. Check
 `num_comments` on the post first. The nasa post used elsewhere in this README
@@ -311,7 +321,7 @@ await client.close();
 5 comments; first: "I only WISH that I could be there! What an incredible evenin"
 ```
 
-### Recent reels
+### Scrape Instagram reels from a profile
 
 ```javascript
 import { bdclient } from "@brightdata/sdk";
@@ -339,7 +349,7 @@ here. This call finished in 62 seconds on its own. It did expire once at 900
 seconds, while seven other jobs were running against the same account. The
 extra headroom in the snippet costs nothing when the job is quick.
 
-## The data
+## Instagram post data fields (JSON)
 
 The fields most people want:
 
@@ -442,7 +452,7 @@ The whole file, one post with every field, is
 
 </details>
 
-## When it fails
+## Instagram scraper errors
 
 | you see | what it means |
 | --- | --- |
@@ -463,7 +473,7 @@ From the SDK, the same conditions look like this:
 | a row in `result.data` with an `error` key | The API's answer for one input, when you asked for `includeErrors`. The other rows are fine. |
 | zero rows where you expected an error | You did not pass `includeErrors: true`, so the API dropped the row that would have explained it. |
 
-## Coding agents
+## Instagram MCP server and Claude Code skill
 
 No JavaScript, nothing installed. Paste both lines; the first opens a browser
 once, or use `bdata login --device` over SSH and in CI:
@@ -493,6 +503,14 @@ An agent can also open the account itself, no signup form:
 Data connects to, from LangChain to Zapier and n8n:
 [integrations](https://docs.brightdata.com/integrations/introduction).
 
+## Is this Instagram scraper free?
+
+New Bright Data accounts get
+[5,000 free credits a month](https://docs.brightdata.com/general/account/billing-and-pricing/free-tier).
+Posts, reels and profiles cost one credit per record, and comments one credit
+per comment, so the free credits cover 5,000 posts a month.
+[Pricing](https://brightdata.com/pricing/web-scraper) lists the rates after that.
+
 ## Support
 
 Bugs in this repo:
@@ -505,6 +523,6 @@ Anything about the API, your account or your credits:
 
 [Apache 2.0](LICENSE).
 
-## Python version
+## Instagram scraper for Python
 
 The same Instagram scraper is available for Python: [brightdata/instagram-scraper](https://github.com/brightdata/instagram-scraper).
