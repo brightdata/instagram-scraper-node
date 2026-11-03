@@ -480,12 +480,15 @@ once, or use `bdata login --device` over SSH and in CI:
 
 ```bash
 npx -p @brightdata/cli bdata login
-npx -p @brightdata/cli bdata pipelines instagram_posts "https://www.instagram.com/p/DcOX3hWFiey/"
+npx -p @brightdata/cli bdata pipelines run gd_lk5ns7kz21pck8jpis collect_by_url "https://www.instagram.com/p/DcOX3hWFiey/"
 ```
 
-The CLI's four Instagram pipelines each take a post, reel or profile URL and
-return that one record. Recent posts from a profile is the SDK call in the
-Quickstart; the CLI has no route for it.
+The CLI runs a scraper by its dataset ID. The four Instagram scrapers each
+take a post, reel or profile URL and return that one record;
+`bdata pipelines search instagram` lists their IDs and methods. Recent posts
+from a profile is the SDK call in the
+[quickstart](#how-to-scrape-instagram-data-with-nodejs); the CLI has no route
+for it.
 
 `npx skills add brightdata/skills` teaches Claude Code, Cursor and Codex these
 commands and the docs, so plain language works afterwards. Full guide:
