@@ -39,15 +39,27 @@ const HANDLE = /^[A-Za-z0-9._]{1,30}$/;
  */
 export const sdk = { bdclient };
 
-/** Accept nasa, @nasa, or a profile URL. Reject anything else. */
+/**
+ * Accept nasa, @nasa, or a profile URL. Reject anything else.
+ *
+ * A URL counts only when its host is instagram.com or a subdomain of it, so
+ * https://evil.com/instagram.com/nasa is rejected rather than read as nasa.
+ */
 export function cleanHandle(handle) {
-  let cleaned = String(handle ?? "").trim().replace(/\/+$/, "").replace(/^@/, "");
-  if (cleaned.includes("instagram.com/")) {
-    cleaned = cleaned.slice(cleaned.lastIndexOf("/") + 1);
+  const invalid = new Error(`${JSON.stringify(String(handle))} is not an Instagram handle`);
+  let cleaned = String(handle ?? "").trim().replace(/^@/, "");
+  if (cleaned.includes("/")) {
+    let url;
+    try {
+      url = new URL(cleaned.includes("://") ? cleaned : `https://${cleaned}`);
+    } catch {
+      throw invalid;
+    }
+    const host = url.hostname.toLowerCase();
+    if (host !== "instagram.com" && !host.endsWith(".instagram.com")) throw invalid;
+    cleaned = url.pathname.split("/").filter(Boolean)[0] ?? "";
   }
-  if (!HANDLE.test(cleaned)) {
-    throw new Error(`${JSON.stringify(String(handle))} is not an Instagram handle`);
-  }
+  if (!HANDLE.test(cleaned)) throw invalid;
   return cleaned;
 }
 

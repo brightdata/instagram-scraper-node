@@ -62,6 +62,24 @@ describe("handles", () => {
     assert.equal(cleanHandle("https://www.instagram.com/nasa/"), "nasa");
     assert.throws(() => cleanHandle("not a handle"), /is not an Instagram handle/);
   });
+
+  test("the handle comes from any Instagram profile URL", () => {
+    assert.equal(cleanHandle("instagram.com/nasa"), "nasa");
+    assert.equal(cleanHandle("https://instagram.com/nasa/reels/"), "nasa");
+    assert.equal(cleanHandle("https://www.instagram.com/nasa?igsh=abc123"), "nasa");
+    assert.equal(cleanHandle("nat.geo"), "nat.geo");
+  });
+
+  test("a URL on another host is rejected", () => {
+    for (const url of [
+      "https://evil.com/instagram.com/nasa",
+      "https://instagram.com.evil.com/nasa",
+      "https://notinstagram.com/nasa",
+      "https://www.instagram.com/",
+    ]) {
+      assert.throws(() => cleanHandle(url), /is not an Instagram handle/);
+    }
+  });
 });
 
 describe("what the API answers", () => {
