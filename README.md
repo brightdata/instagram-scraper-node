@@ -6,7 +6,7 @@ Scrape Instagram profiles, posts, reels and comments to JSON with Node.js and Ja
 Built on the [Bright Data Instagram Scraper API](https://brightdata.com/products/web-scraper/instagram?utm_source=github&utm_medium=referral&utm_content=instagram-scraper-node). New accounts get 5,000 free credits a month.
 
 [![Live check](https://github.com/brightdata/instagram-scraper-node/actions/workflows/live.yml/badge.svg)](https://github.com/brightdata/instagram-scraper-node/actions/workflows/live.yml)
-[![last verified](https://img.shields.io/badge/last%20verified-11%20Nov%202026-brightgreen)](https://github.com/brightdata/instagram-scraper-node/actions/workflows/live.yml) <!-- verified: rewritten by the daily run -->
+[![last verified](https://img.shields.io/badge/last%20verified-11%20Nov%202026-brightgreen)](https://github.com/brightdata/instagram-scraper-node/actions/workflows/live.yml) <!-- verified: rewritten by the weekly run -->
 
 [Quickstart](#how-to-scrape-instagram-data-with-nodejs) · [No login](#scrape-instagram-without-login-or-an-access-token) · [CLI](#bulk-instagram-scraper-cli) · [Endpoints](#scrape-instagram-posts-profiles-reels-and-comments) · [Data](#instagram-post-data-fields-json) · [Errors](#instagram-scraper-errors) · [MCP and Claude Code](#instagram-mcp-server-and-claude-code-skill) · [Free credits](#is-this-instagram-scraper-free) · [Docs](https://docs.brightdata.com/products/scrapers/instagram/introduction) · [Support](#support)
 
@@ -369,7 +369,7 @@ fetched from nasa can say `nasajohnson`; `coauthor_producers` lists everyone.
 <details>
 <summary>All 44 fields, with type and description</summary>
 
-Regenerated every day from the dataset schema, via
+Regenerated every week from the dataset schema, via
 `client.datasets.instagramPosts.getMetadata()`, so it cannot go stale. A
 post carries the fields that apply to it; the sample file has 34
 of these 44.
