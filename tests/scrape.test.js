@@ -366,7 +366,7 @@ describe("the README", () => {
       readme.includes(sample.split("\n").slice(0, 19).join("\n")),
       "README excerpt drifted from the file",
     );
-    assert.ok(readme.includes("](examples/sample_output.json)"));
+    assert.ok(readme.includes("/blob/main/examples/sample_output.json)")); // absolute: npm shows this README
   });
 
   test("every in-page link has its heading", async () => {
@@ -379,5 +379,13 @@ describe("the README", () => {
     for (const [, anchor] of readme.matchAll(/\]\(#([^)]+)\)/g)) {
       assert.ok(anchors.has(anchor), `#${anchor} points at no heading`);
     }
+  });
+});
+
+describe("the package", () => {
+  test("VERSION in src/index.js matches package.json", async () => {
+    const { VERSION } = await import("../src/index.js");
+    const pkg = JSON.parse(await readFile(join(ROOT, "package.json"), "utf8"));
+    assert.equal(VERSION, pkg.version, "bump both, or the publish workflow stops");
   });
 });

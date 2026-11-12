@@ -1,8 +1,18 @@
 {
-  "name": "@brightdata/instagram-scraper-node",
+  "name": "@brightdata/instagram-scraper",
   "version": "0.1.0",
   "description": "Instagram scraper in JavaScript: profiles, posts, reels and comments as JSON, on the Bright Data Instagram Scraper API (Web Scraper API). No Instagram login, no browser. 5,000 free credits a month.",
-  "private": true,
+  "keywords": [
+    "instagram",
+    "instagram-scraper",
+    "scraper",
+    "web-scraping",
+    "bright-data",
+    "instagram-api",
+    "reels",
+    "profiles"
+  ],
+  "author": "Bright Data",
   "type": "module",
   "license": "Apache-2.0",
   "engines": {
@@ -16,7 +26,8 @@
     "instagram-scraper": "src/cli.js"
   },
   "files": [
-    "src"
+    "src",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "test": "node --test tests/",
@@ -35,5 +46,9 @@
   "bugs": {
     "url": "https://github.com/brightdata/instagram-scraper-node/issues"
   },
-  "homepage": "https://github.com/brightdata/instagram-scraper-node#readme"
+  "homepage": "https://github.com/brightdata/instagram-scraper-node#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
 }
